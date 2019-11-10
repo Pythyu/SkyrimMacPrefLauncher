@@ -4,7 +4,7 @@ import os
 from os import listdir
 from os.path import isfile, join
 
-formats = [".esb",".bsa",".py"]
+formats = [".esb",".bsa",".esm"]
 def find_data_files(path):
     data_files_path = []
     onlyfiles = [f for f in listdir(path) if isfile(join(path, f))]
@@ -18,6 +18,10 @@ def parse_data(data):
     for k,elem in enumerate(data):
         name = elem.split('/')[-1]
         data[k] = name
+        if name[-3:] == "esm":
+            data.remove(name)
+            data.insert(0,name)
+            
     for k in range(len(data)):
         if data[k][-3:] == "bsa" and data[k+1][-3:] == "esb":
             data[k], data[k+1] = data[k+1], data[k]
