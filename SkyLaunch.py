@@ -4,7 +4,7 @@ import os
 from os import listdir
 from os.path import isfile, join
 
-formats = [".esb",".bsa",".esm"]
+formats = [".bsa",".esm",".esp"]
 def find_data_files(path):
     data_files_path = []
     onlyfiles = [f for f in listdir(path) if isfile(join(path, f))]
@@ -22,9 +22,10 @@ def parse_data(data):
             data.remove(name)
             data.insert(0,name)
             
-    for k in range(len(data)):
-        if data[k][-3:] == "bsa" and data[k+1][-3:] == "esb":
-            data[k], data[k+1] = data[k+1], data[k]
+    for k in range(len(data)-1):
+        if data[k][:-3] == data[k+1][:-3]:
+            if data[k][-3:] == "bsa" and data[k+1][-3:] == "esp":
+                data[k], data[k+1] = data[k+1], data[k]
 
 def create_data_file(path,data):
     parse_data(data)
@@ -38,11 +39,12 @@ def create_checks(data):
         checks.append(Checkbutton(Dchks,text=raw,variable=checks_var[k]))
 
 def write_data():
+    final = []
     for k,elem in enumerate(raw_data):
-        if checks_var[k].get() == 0:
-            raw_data.remove(elem)
-    create_data_file(plugin_folder,raw_data)
-    tk.destroy()
+        if checks_var[k].get() == 1:
+            final.append(elem)
+    create_data_file(plugin_folder,final)
+    
             
         
 if __name__ == '__main__':
