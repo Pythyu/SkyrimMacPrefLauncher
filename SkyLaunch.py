@@ -28,10 +28,33 @@ def create_data_file(path,data):
     for name in data:
         file.writeline(name)
     file.close()
+
+def create_checks(data):
+    for k,raw in enumerate(data):
+        checks.append(Checkbutton(Dchks,text=raw,variable=checks_var[k]))
             
         
+if __name__ == '__main__':
+    tk = Tk()
+    Dchks = Frame(tk)
+    Dchks.pack(side=TOP)
 
-#tk = Tk()
+    options = {}
+    options['initialdir'] = os.getcwd()
+    options['title'] = "Select your data folder"
+    options['mustexist'] = False
+    
+    data_folder = filedialog.askdirectory(**options)
+    options['title'] = "Select your plugin folder"
+    plugin_folder = filedialog.askdirectory(**options)
+
+    raw_data = find_data_files(data_folder)
+
+    checks_var = [IntVar() for i in range(len(raw_data))]
+    checks = []
+    create_checks(raw_data)
+    for elem in checks:
+        elem.pack(side=TOP)
 
 #can = Canvas(width=800,height=600)
 #can.pack()
