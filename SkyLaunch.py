@@ -26,12 +26,19 @@ def create_data_file(path,data):
     parse_data(data)
     file = open(path+'/plugins.txt','w')
     for name in data:
-        file.writeline(name)
+        file.write(name+'\n')
     file.close()
 
 def create_checks(data):
     for k,raw in enumerate(data):
         checks.append(Checkbutton(Dchks,text=raw,variable=checks_var[k]))
+
+def write_data():
+    for k,elem in enumerate(raw_data):
+        if checks_var[k].get() == 0:
+            raw_data.remove(elem)
+    create_data_file(plugin_folder,raw_data)
+    tk.destroy()
             
         
 if __name__ == '__main__':
@@ -55,6 +62,8 @@ if __name__ == '__main__':
     create_checks(raw_data)
     for elem in checks:
         elem.pack(side=TOP)
+    Write_button = Button(Dchks,text="Done",command=write_data)
+    Write_button.pack()
 
 #can = Canvas(width=800,height=600)
 #can.pack()
