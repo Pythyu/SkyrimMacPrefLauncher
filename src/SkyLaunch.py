@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import filedialog
+from pref_merger import merge
 import os
 from os import listdir
 from os.path import isfile, join
@@ -44,33 +45,51 @@ def write_data():
         if checks_var[k].get() == 1:
             final.append(elem)
     create_data_file(plugin_folder,final)
+
+def get_dir(msg):
+    options = {}
+    options['initialdir'] = os.getcwd()
+    options['title'] = msg
+    options['mustexist'] = False
+    print(msg)
+    path = filedialog.askdirectory(**options)
+    return path
     
             
         
 if __name__ == '__main__':
     tk = Tk()
-    Dchks = Frame(tk)
-    Dchks.pack(side=TOP)
-
-    options = {}
-    options['initialdir'] = os.getcwd()
-    options['title'] = "Select your data folder"
-    options['mustexist'] = False
     
-    data_folder = filedialog.askdirectory(**options)
-    options['title'] = "Select your plugin folder"
-    plugin_folder = filedialog.askdirectory(**options)
+    print("Plugin file creation or Edit Parameters ? (o/x)")
+    inp = input(">>> ")
+    if inp == "o":
+        Dchks = Frame(tk)
+        Dchks.pack(side=TOP)
+        options = {}
+        options['initialdir'] = os.getcwd()
+        options['title'] = "Select your data folder"
+        options['mustexist'] = False
+        print("Select your data folder")
+        data_folder = filedialog.askdirectory(**options)
+        print("Select your plugin folder")
+        options['title'] = "Select your plugin folder"
+        plugin_folder = filedialog.askdirectory(**options)
 
-    raw_data = find_data_files(data_folder)
+        raw_data = find_data_files(data_folder)
 
-    checks_var = [IntVar() for i in range(len(raw_data))]
-    checks = []
-    create_checks(raw_data)
-    for elem in checks:
-        elem.pack(side=TOP)
-    Write_button = Button(Dchks,text="Done",command=write_data)
-    Write_button.pack()
-
+        checks_var = [IntVar() for i in range(len(raw_data))]
+        checks = []
+        create_checks(raw_data)
+        for elem in checks:
+            elem.pack(side=TOP)
+        Write_button = Button(Dchks,text="Done",command=write_data)
+        Write_button.pack()
+    else:
+        skypref = get_dir("Select your SkyrimPref.ini")
+        spec = get_dir("Select your graphic setting file (.ini | ex : low.ini")
+        merge(skypref,spec)
+        
+        
 #can = Canvas(width=800,height=600)
 #can.pack()
 
